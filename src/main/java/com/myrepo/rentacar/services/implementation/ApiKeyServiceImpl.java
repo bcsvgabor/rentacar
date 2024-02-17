@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
+/*
 @Service
 public class ApiKeyServiceImpl implements ApiKeyService {
     @Override
@@ -22,3 +23,5 @@ public class ApiKeyServiceImpl implements ApiKeyService {
         return generateTokenFromRandomLetters(apiKey.getId(), randomLetters);
     }
 }
+*/
+
