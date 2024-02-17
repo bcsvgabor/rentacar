@@ -1,2 +1,2 @@
 # rentacar
-my own repository for study purposes
+ my car rental app project

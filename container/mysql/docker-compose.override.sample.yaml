@@ -1,0 +1,12 @@
+version: '1.0'
+services:
+  mysql:
+    ports:
+      - "3306:3306" - instead of the left side 3306 you can write your own Port number if the 3306 is already in use
+    environment:
+      MYSQL_ROOT_PASSWORD: some_random_password
+      MYSQL_DATABASE: your_database_name
+      MYSQL_USER: your_username
+      MYSQL_PASSWORD: your_password
+    volumes:
+      - "/c/here/comes/the/absolut/path/for/db/files:/var/lib/mysql" - dont change anything after the semicolon
