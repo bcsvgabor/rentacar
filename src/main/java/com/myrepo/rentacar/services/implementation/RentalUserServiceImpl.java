@@ -1,17 +1,26 @@
 package com.myrepo.rentacar.services.implementation;
 
+import com.myrepo.rentacar.dto.CreateRentalDetailsRequest;
 import com.myrepo.rentacar.entities.RentalUser;
 import com.myrepo.rentacar.exceptions.NotFoundException;
 import com.myrepo.rentacar.repositories.RentalUserRepository;
 import com.myrepo.rentacar.services.RentalUserService;
+import com.myrepo.rentacar.utils.PasswordUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class RentalUserServiceImpl implements RentalUserService {
 
     private final RentalUserRepository rentalUserRepository;
+    private final PasswordUtil passwordUtil;
+
+    @Value("${backoffice.pwd.secret_key}")
+    private String secret;
 
     @Override
     public RentalUser findByEmail(String userName) {
@@ -30,5 +39,33 @@ public class RentalUserServiceImpl implements RentalUserService {
 
     public String getRoleOfUser(RentalUser foxUser) {
         return foxUser.getRole();
+    }
+
+    @Override
+    public void deleteUser(RentalUser rentalUser) {
+        Long userId = rentalUser.getId();
+        rentalUserRepository.deleteUserById(userId);
+    }
+
+    public void createRentalUser(CreateRentalDetailsRequest createUserDetailsRequest) {
+
+        String passwordHashed = passwordUtil.createHash(createUserDetailsRequest.getPassword(), secret);
+
+        RentalUser rentalUser = new RentalUser();
+
+        rentalUser.setEmail(createUserDetailsRequest.getEmail());
+        rentalUser.setPassword(passwordHashed);
+        rentalUser.setRole(createUserDetailsRequest.getRole());
+
+        rentalUserRepository.save(rentalUser);
+    }
+
+    public Long getFoxUserIdByEmail(String email) throws NotFoundException {
+        Optional<RentalUser> foxUser = rentalUserRepository.findByEmail(email);
+        if (foxUser.isPresent()) {
+            return foxUser.get().getId();
+        } else {
+            throw new NotFoundException("FoxUser email not found.");
+        }
     }
 }
