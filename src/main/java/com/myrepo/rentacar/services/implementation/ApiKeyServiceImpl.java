@@ -1,5 +1,7 @@
 package com.myrepo.rentacar.services.implementation;
 
+import com.myrepo.rentacar.dto.ApiKeyResponseDTO;
+import com.myrepo.rentacar.dto.Impersonation;
 import com.myrepo.rentacar.entities.ApiKey;
 import com.myrepo.rentacar.entities.RentalUser;
 import com.myrepo.rentacar.repositories.ApiKeyRepository;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.Base64;
+import java.util.List;
 import java.util.Random;
 
 
@@ -39,6 +42,36 @@ public class ApiKeyServiceImpl implements ApiKeyService {
         apiKey.setActive(true);
         apiKeyRepository.save(apiKey);
         return generateTokenFromRandomString(apiKey.getId(), randomString);
+    }
+
+    @Override
+    public void saveApiKey(ApiKey apiKey) {
+
+    }
+
+    @Override
+    public String decodeSecret(String secret) {
+        return null;
+    }
+
+    @Override
+    public void revokeApiKey(Long id, Impersonation modifiedBy) {
+
+    }
+
+    @Override
+    public List<ApiKeyResponseDTO> findAllKeysSorted(String all, Impersonation impersonation) {
+        return null;
+    }
+
+    @Override
+    public boolean isApiKeyValid(String nonHashedApiKey) {
+        return false;
+    }
+
+    @Override
+    public Long getApiKeyId(String nonHashSecret) {
+        return null;
     }
 
     private String generateRandomSecret() {
