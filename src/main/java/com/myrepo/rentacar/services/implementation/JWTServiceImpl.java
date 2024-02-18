@@ -1,11 +1,9 @@
 package com.myrepo.rentacar.services.implementation;
 
 
-import com.gfa.backoffice.entities.FoxUser;
-import com.gfa.backoffice.repositories.FoxUserRepository;
-import com.gfa.backoffice.services.DateService;
-import com.gfa.backoffice.services.JWTService;
+import com.myrepo.rentacar.entities.RentalUser;
 import com.myrepo.rentacar.repositories.RentalUserRepository;
+import com.myrepo.rentacar.services.DateService;
 import com.myrepo.rentacar.services.JWTService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -35,23 +33,22 @@ public class JWTServiceImpl implements JWTService {
 
     public String generateToken(UserDetails userDetails, Long apiKeyId) {
 
-        FoxUser foxUser = foxUserRepository.findByEmail(userDetails.getUsername()).get();
+        RentalUser foxUser = rentalUserRepository.findByEmail(userDetails.getUsername()).get();
 
         Long id = foxUser.getId();
 
         Key secretKey = new SecretKeySpec(getSigninKey(), "HmacSHA512");
 
-        foxUser.setLastLogin(dateService.getCurrentDateTime());
-        foxUserRepository.save(foxUser);
+        rentalUserRepository.save(foxUser);
 
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
                 .claim("id", id)
-                .claim("roles", foxUserServiceImpl.getRolesOfUser(foxUser))
+                .claim("role", rentalUserServiceImpl.getRoleOfUser(foxUser))
                 .claim("client", apiKeyId)
-                .claim("roles", foxUserServiceImpl.getRolesOfUser(foxUser))
+                .claim("roles", rentalUserServiceImpl.getRoleOfUser(foxUser))
                 .signWith(secretKey, SignatureAlgorithm.HS512)
                 .compact();
     }
@@ -93,7 +90,7 @@ public class JWTServiceImpl implements JWTService {
 
     public List<String> extractUserRoles(String token) {
 
-        return extractClaim(token, claims -> claims.get("roles",List.class));
+        return extractClaim(token, claims -> claims.get("roles", List.class));
 
     }
 

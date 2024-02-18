@@ -1,6 +1,10 @@
 package com.myrepo.rentacar;
 
 import com.myrepo.rentacar.entities.RentalUser;
+import com.myrepo.rentacar.services.ApiKeyService;
+import com.myrepo.rentacar.services.AuthenticationService;
+import com.myrepo.rentacar.services.RentalRoleService;
+import com.myrepo.rentacar.services.RentalUserService;
 import com.myrepo.rentacar.utils.ApiKeyCreationTool;
 import com.myrepo.rentacar.utils.UserCreationTool;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +21,18 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class RentacarApplication implements CommandLineRunner, ApplicationRunner {
 
+    private final AuthenticationService authenticationService;
+    private final RentalRoleService rentalRoleService;
+    private final RentalUserService rentalUserService;
+    private final ApiKeyService apiKeyService;
+
     public static void main(String[] args) {
         SpringApplication.run(RentacarApplication.class, args);
     }
 
     @Override
-    public void run(String... args) throws Exception {
-        UserCreationTool userCreationTool = new UserCreationTool(foxUserService, foxRoleService);
+    public void run(String... args) {
+        UserCreationTool userCreationTool = new UserCreationTool(rentalUserService, rentalRoleService);
         ApiKeyCreationTool apiKeyCreationTool = new ApiKeyCreationTool();
 
         if (Objects.equals(args[0], "--init")) {
@@ -42,13 +51,8 @@ public class RentacarApplication implements CommandLineRunner, ApplicationRunner
         }
     }
 
-
     @Override
     public void run(ApplicationArguments args) {
-        foxRoleService.initializeRoles();
-        foxUserService.addRetailsRoleToUsers();
-
+        rentalRoleService.initializeRoles();
     }
-
-
 }

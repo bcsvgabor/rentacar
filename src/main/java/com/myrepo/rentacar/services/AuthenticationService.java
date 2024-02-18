@@ -1,16 +1,16 @@
 package com.myrepo.rentacar.services;
 
 
-import com.gfa.backoffice.dto.JWTAuthenticationResponse;
-import com.gfa.backoffice.dto.SignInRequest;
-import com.gfa.backoffice.dto.SignUpRequest;
-import com.gfa.backoffice.entities.FoxUser;
+import com.myrepo.rentacar.dto.JWTAuthenticationResponse;
+import com.myrepo.rentacar.dto.SignInRequest;
+import com.myrepo.rentacar.dto.SignUpRequest;
+import com.myrepo.rentacar.entities.RentalUser;
 
 public interface AuthenticationService {
     void signup(SignUpRequest signUpRequest);
 
     JWTAuthenticationResponse signIn(SignInRequest signInRequest);
 
-    FoxUser saveNewAdmin(String email, String password);
+    RentalUser saveNewAdmin(String email, String password);
 }
 

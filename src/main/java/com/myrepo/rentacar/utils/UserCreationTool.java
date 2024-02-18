@@ -1,7 +1,7 @@
 package com.myrepo.rentacar.utils;
 
-import com.gfa.backoffice.services.FoxRoleService;
-import com.gfa.backoffice.services.FoxUserService;
+import com.myrepo.rentacar.services.RentalRoleService;
+import com.myrepo.rentacar.services.RentalUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,11 +14,13 @@ import java.util.Scanner;
 @AllArgsConstructor
 public class UserCreationTool {
 
-
     /**
-     *  --init --dburl jdbc:mysql://localhost/backoffice?serverTimezone=UTC&createDatabaseIfNotExist=true --dbusr root --email asd@asd.com
-     *
+     * --init --dburl jdbc:mysql://localhost/backoffice?serverTimezone=UTC&createDatabaseIfNotExist=true --dbusr root --email asd@asd.com
      */
+
+    public UserCreationTool(RentalUserService foxUserService, RentalRoleService foxRoleService) {
+    }
+
     public HashMap<String, String> getDbDataAndEmail(String[] args) {
 
         HashMap<String, String> data = new HashMap<>();
