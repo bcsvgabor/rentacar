@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 
@@ -66,7 +67,22 @@ public class ApiKeyServiceImpl implements ApiKeyService {
 
     @Override
     public boolean isApiKeyValid(String nonHashedApiKey) {
+        Optional<ApiKey> apiKey = apiKeyRepository.findById(getApiKeyId(nonHashedApiKey));
+        if (apiKey.isPresent()) {
+
+            boolean isNotExpired = apiKey.get().getExpiresAt() == null || apiKey.get().getExpiresAt().isAfter(LocalDate.now());
+            boolean isActive = apiKey.get().isActive();
+            boolean tokenMatches = tokenMatches(nonHashedApiKey, apiKey.get());
+
+            return  tokenMatches && isNotExpired && isActive;
+        }
         return false;
+    }
+
+    private boolean tokenMatches(String secretHash, ApiKey apiKey) {
+        String[] decodedSecret = decodeSecret(secretHash).split(":");
+        String password = decodedSecret[1];
+        return passwordUtil.verifyHash(apiKey.getToken(), password, secret);
     }
 
     @Override
@@ -89,6 +105,8 @@ public class ApiKeyServiceImpl implements ApiKeyService {
         byte[] bytes = tokenBeforeEncoding.getBytes(StandardCharsets.UTF_8);
         return Base64.getEncoder().encodeToString(bytes);
     }
+
+
 }
 
 

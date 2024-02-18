@@ -68,4 +68,9 @@ public class RentalUserServiceImpl implements RentalUserService {
             throw new NotFoundException("FoxUser email not found.");
         }
     }
+
+    public boolean existsByEmail(String email) {
+        return rentalUserRepository.existsByEmail(email);
+    }
+
 }

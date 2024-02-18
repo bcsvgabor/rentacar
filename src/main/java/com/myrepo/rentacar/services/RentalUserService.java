@@ -16,5 +16,7 @@ public interface RentalUserService {
 
     Long getFoxUserIdByEmail(String email);
 
+    boolean existsByEmail(String email);
+
 
 }
