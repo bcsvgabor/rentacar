@@ -1,5 +1,7 @@
 package com.myrepo.rentacar;
 
+import com.myrepo.rentacar.entities.RentalUser;
+import com.myrepo.rentacar.utils.ApiKeyCreationTool;
 import com.myrepo.rentacar.utils.UserCreationTool;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
@@ -32,7 +34,7 @@ public class RentacarApplication implements CommandLineRunner, ApplicationRunner
             HashMap<String, String> dbDataAndEmail = userCreationTool.getDbDataAndEmail(args);
             HashMap<String, String> getPasswordInputs = userCreationTool.getPasswords();
 
-            FoxUser foxUser = authenticationService.saveNewAdmin(dbDataAndEmail.get("email"), getPasswordInputs.get("userPassword"));
+            RentalUser foxUser = authenticationService.saveNewAdmin(dbDataAndEmail.get("email"), getPasswordInputs.get("userPassword"));
             System.out.printf("Created a user with the email: %s%n", dbDataAndEmail.get("email"));
 
             System.out.println("Generating API Key!");
