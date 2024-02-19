@@ -12,7 +12,14 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
+import java.util.Date;
 import java.util.List;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.SignatureAlgorithm;
+
+
 
 
 @Service
@@ -28,63 +35,71 @@ public class JWTServiceImpl implements JWTService {
     private final DateService dateService;
 
 
+
     public String generateToken(UserDetails userDetails, Long apiKeyId) {
 
-        RentalUser foxUser = rentalUserRepository.findByEmail(userDetails.getUsername()).get();
+        RentalUser rentalUser = rentalUserRepository.findByEmail(userDetails.getUsername()).get();
 
-        Long id = foxUser.getId();
+        Long id = rentalUser.getId();
 
         Key secretKey = new SecretKeySpec(getSigninKey(), "HmacSHA512");
 
-        rentalUserRepository.save(foxUser);
-
-        /*
+//        rentalUser.setLastLogin(dateService.getCurrentDateTime());
+//        foxUserRepository.save(rentalUser);
 
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
                 .claim("id", id)
-                .claim("role", rentalUserServiceImpl.getRoleOfUser(foxUser))
+                .claim("roles", rentalUserServiceImpl.getRoleOfUser(rentalUser))
                 .claim("client", apiKeyId)
-                .claim("roles", rentalUserServiceImpl.getRoleOfUser(foxUser))
+                .claim("roles", rentalUserServiceImpl.getRolesOfUser(rentalUser))
                 .signWith(secretKey, SignatureAlgorithm.HS512)
                 .compact();
-
-    */
-        return null;
-
-    }
-
-    @Override
-    public String extractUserName(String token) {
-        return null;
-    }
-
-    @Override
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        return false;
-    }
-
-    @Override
-    public List<String> extractUserRoles(String token) {
-        return null;
     }
 
 
-    private byte[] getSigninKey() {
-        byte[] key = secret.getBytes();
-        byte[] result = new byte[KEY_LEN];
-        int p = 0;
-        while (p < key.length) {
-            int l = Math.min(key.length, result.length - p);
-            System.arraycopy(key, 0, result, p, l);
-            p += l;
+
+        private byte[] getSigninKey() {
+            byte[] key = secret.getBytes();
+            byte[] result = new byte[KEY_LEN];
+            int p = 0;
+            while (p < key.length) {
+                int l = Math.min(key.length, result.length - p);
+                System.arraycopy(key, 0, result, p, l);
+                p += l;
+            }
+
+            return result;
         }
 
-        return result;
-    }
+        public String extractUserName(String token) {
+            return extractClaim(token, Claims::getSubject);
+        }
 
+        public <T> T extractClaim(String token, Function<Claims, T> claimsResolvers) {
+            final Claims claims = extractAllClaim(token);
+            return claimsResolvers.apply(claims);
+        }
 
+        public Claims extractAllClaim(String token) {
+            return Jwts.parserBuilder().setSigningKey(getSigninKey()).build().parseClaimsJws(token).getBody();
+        }
+
+        public boolean isTokenValid(String token, UserDetails userDetails) {
+            final String username = extractUserName(token);
+            return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        }
+
+        private boolean isTokenExpired(String token) {
+            return extractClaim(token, Claims::getExpiration).before(new Date());
+        }
+
+        public List<String> extractUserRoles(String token) {
+
+            return extractClaim(token, claims -> claims.get("roles",List.class));
+
+        }
 
 }
