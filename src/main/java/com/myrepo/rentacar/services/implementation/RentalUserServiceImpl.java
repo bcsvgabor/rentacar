@@ -87,5 +87,9 @@ public class RentalUserServiceImpl implements RentalUserService {
             }
         };
     }
+    @Override
+    public Optional<RentalUser> findUserById(Long id) {
+        return rentalUserRepository.findById(id);
+    }
 
 }

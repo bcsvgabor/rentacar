@@ -5,6 +5,8 @@ import com.myrepo.rentacar.entities.RentalUser;
 import com.myrepo.rentacar.exceptions.NotFoundException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import java.util.Optional;
+
 public interface RentalUserService {
 
     RentalUser findByEmail(String userName);
@@ -20,4 +22,6 @@ public interface RentalUserService {
     boolean existsByEmail(String email);
 
     UserDetailsService userDetailsService();
+
+    Optional<RentalUser> findUserById(Long id);
 }
