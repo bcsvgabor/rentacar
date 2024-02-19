@@ -1,6 +1,7 @@
 package com.myrepo.rentacar.services.implementation;
 
 import com.myrepo.rentacar.dto.CreateRentalDetailsRequest;
+import com.myrepo.rentacar.dto.Impersonation;
 import com.myrepo.rentacar.entities.RentalUser;
 import com.myrepo.rentacar.exceptions.NotFoundException;
 import com.myrepo.rentacar.repositories.RentalUserRepository;
@@ -8,6 +9,9 @@ import com.myrepo.rentacar.services.RentalUserService;
 import com.myrepo.rentacar.utils.PasswordUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -71,6 +75,17 @@ public class RentalUserServiceImpl implements RentalUserService {
 
     public boolean existsByEmail(String email) {
         return rentalUserRepository.existsByEmail(email);
+    }
+
+    @Override
+    public UserDetailsService userDetailsService() {
+        return new UserDetailsService() {
+            @Override
+            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+                return Impersonation.fromUser(rentalUserRepository.findByEmail(username).get());
+            }
+        };
     }
 
 }

@@ -3,6 +3,7 @@ package com.myrepo.rentacar.services;
 import com.myrepo.rentacar.dto.CreateRentalDetailsRequest;
 import com.myrepo.rentacar.entities.RentalUser;
 import com.myrepo.rentacar.exceptions.NotFoundException;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface RentalUserService {
 
@@ -18,5 +19,5 @@ public interface RentalUserService {
 
     boolean existsByEmail(String email);
 
-
+    UserDetailsService userDetailsService();
 }
