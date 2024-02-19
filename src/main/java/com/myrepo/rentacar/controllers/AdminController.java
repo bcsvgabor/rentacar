@@ -1,7 +1,7 @@
 package com.myrepo.rentacar.controllers;
 
 import com.myrepo.rentacar.dto.CreateRentalDetailsRequest;
-import com.myrepo.rentacar.dto.Impersonation;
+import com.myrepo.rentacar.config.Impersonation;
 import com.myrepo.rentacar.entities.RentalUser;
 import com.myrepo.rentacar.exceptions.NotFoundException;
 import com.myrepo.rentacar.exceptions.UnathorizedUserException;

@@ -1,7 +1,7 @@
 package com.myrepo.rentacar.services;
 
 import com.myrepo.rentacar.dto.ApiKeyResponseDTO;
-import com.myrepo.rentacar.dto.Impersonation;
+import com.myrepo.rentacar.config.Impersonation;
 import com.myrepo.rentacar.entities.ApiKey;
 import com.myrepo.rentacar.entities.RentalUser;
 

@@ -1,17 +1,15 @@
 package com.myrepo.rentacar.services.implementation;
 
-import com.myrepo.rentacar.dto.Impersonation;
+import com.myrepo.rentacar.config.Impersonation;
 import com.myrepo.rentacar.dto.JWTAuthenticationResponse;
 import com.myrepo.rentacar.dto.SignInRequest;
 import com.myrepo.rentacar.dto.SignUpRequest;
 import com.myrepo.rentacar.entities.RentalUser;
 import com.myrepo.rentacar.exceptions.NotFoundException;
 import com.myrepo.rentacar.exceptions.UnathorizedUserException;
-import com.myrepo.rentacar.repositories.RentalRoleRepository;
 import com.myrepo.rentacar.repositories.RentalUserRepository;
 import com.myrepo.rentacar.services.ApiKeyService;
 import com.myrepo.rentacar.services.AuthenticationService;
-import com.myrepo.rentacar.services.DateService;
 import com.myrepo.rentacar.services.JWTService;
 import com.myrepo.rentacar.utils.PasswordUtil;
 import lombok.RequiredArgsConstructor;

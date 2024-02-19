@@ -1,4 +1,4 @@
-package com.myrepo.rentacar.dto;
+package com.myrepo.rentacar.config;
 
 import com.myrepo.rentacar.entities.RentalUser;
 import lombok.Data;

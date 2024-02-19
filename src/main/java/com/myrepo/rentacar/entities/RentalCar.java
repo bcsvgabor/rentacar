@@ -1,9 +1,6 @@
 package com.myrepo.rentacar.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.text.SimpleDateFormat;
@@ -13,7 +10,7 @@ import java.text.SimpleDateFormat;
 public class RentalCar {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String manufacturer;
     private String type;
