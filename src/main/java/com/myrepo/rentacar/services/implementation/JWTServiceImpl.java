@@ -5,6 +5,9 @@ import com.myrepo.rentacar.entities.RentalUser;
 import com.myrepo.rentacar.repositories.RentalUserRepository;
 import com.myrepo.rentacar.services.DateService;
 import com.myrepo.rentacar.services.JWTService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,10 +17,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Date;
 import java.util.List;
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.SignatureAlgorithm;
+import java.util.function.Function;
 
 
 
@@ -52,9 +52,9 @@ public class JWTServiceImpl implements JWTService {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
                 .claim("id", id)
-                .claim("roles", rentalUserServiceImpl.getRoleOfUser(rentalUser))
+                .claim("role", rentalUserServiceImpl.getRoleOfUser(rentalUser))
                 .claim("client", apiKeyId)
-                .claim("roles", rentalUserServiceImpl.getRolesOfUser(rentalUser))
+                .claim("role", rentalUserServiceImpl.getRoleOfUser(rentalUser))
                 .signWith(secretKey, SignatureAlgorithm.HS512)
                 .compact();
     }
@@ -96,9 +96,9 @@ public class JWTServiceImpl implements JWTService {
             return extractClaim(token, Claims::getExpiration).before(new Date());
         }
 
-        public List<String> extractUserRoles(String token) {
+        public String extractUserRole(String token) {
 
-            return extractClaim(token, claims -> claims.get("roles",List.class));
+            return extractClaim(token, claims -> claims.get("role", String.class));
 
         }
 
