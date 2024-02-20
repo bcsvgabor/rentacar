@@ -1,8 +1,11 @@
 package com.myrepo.rentacar.services;
 
-import com.myrepo.rentacar.dto.CreateRentalDetailsRequest;
+import com.myrepo.rentacar.dto.CreateCustomerRequest;
+import com.myrepo.rentacar.dto.CreateUserDetailsRequest;
+import com.myrepo.rentacar.dto.CustomerProfileResponse;
 import com.myrepo.rentacar.entities.RentalUser;
 import com.myrepo.rentacar.exceptions.NotFoundException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.Optional;
@@ -15,7 +18,7 @@ public interface RentalUserService {
 
     String getRoleOfUser(RentalUser rentalUser);
     void deleteUser(RentalUser foxUser);
-    void createRentalUser(CreateRentalDetailsRequest createRentalDetailsRequest) throws NotFoundException;
+    void createRentalUser(CreateUserDetailsRequest createUserDetailsRequest) throws NotFoundException;
 
     Long getFoxUserIdByEmail(String email);
 
@@ -24,4 +27,11 @@ public interface RentalUserService {
     UserDetailsService userDetailsService();
 
     Optional<RentalUser> findUserById(Long id);
+
+    CreateUserDetailsRequest createCustomerCreateUserDetailsRequest(CreateCustomerRequest createCustomerRequest);
+
+    boolean isAdmin(UserDetails userDetails);
+
+    CustomerProfileResponse createCustomerProfileResponse(Long id);
+
 }

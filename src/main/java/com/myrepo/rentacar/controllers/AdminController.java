@@ -1,7 +1,7 @@
 package com.myrepo.rentacar.controllers;
 
-import com.myrepo.rentacar.dto.CreateRentalDetailsRequest;
 import com.myrepo.rentacar.config.Impersonation;
+import com.myrepo.rentacar.dto.CreateUserDetailsRequest;
 import com.myrepo.rentacar.entities.RentalUser;
 import com.myrepo.rentacar.exceptions.NotFoundException;
 import com.myrepo.rentacar.exceptions.UnathorizedUserException;
@@ -54,24 +54,24 @@ public class AdminController {
     }
 
     @PostMapping("/createuser")
-    public ResponseEntity<?> createUser(@RequestBody CreateRentalDetailsRequest createRentalDetailsRequest,
+    public ResponseEntity<?> createUser(@RequestBody CreateUserDetailsRequest createUserDetailsRequest,
                                         @AuthenticationPrincipal Impersonation impersonation) throws NotFoundException {
 
         if (!impersonation.isAdmin()) {
             throw new UnathorizedUserException("Admin role required.");
         }
 
-        if (createRentalDetailsRequest == null || !createRentalDetailsRequest.isValid()
-                || !PasswordValidatorUtil.isProdPasswordValid(createRentalDetailsRequest.getPassword())) {
+        if (createUserDetailsRequest == null || !createUserDetailsRequest.isValid()
+                || !PasswordValidatorUtil.isProdPasswordValid(createUserDetailsRequest.getPassword())) {
             throw new ValidationAppException("Request is not valid.");
         }
 
-        rentalUserService.createRentalUser(createRentalDetailsRequest);
+        rentalUserService.createRentalUser(createUserDetailsRequest);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(rentalUserService.getFoxUserIdByEmail(createRentalDetailsRequest.getEmail()))
+                .buildAndExpand(rentalUserService.getFoxUserIdByEmail(createUserDetailsRequest.getEmail()))
                 .toUri();
 
         return ResponseEntity.status(HttpStatus.CREATED)
