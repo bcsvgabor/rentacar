@@ -29,12 +29,6 @@ public class AdminController {
     private final RentalUserService rentalUserService;
     private final RentalUserRepository rentalUserRepository;
 
-
-    @GetMapping
-    public ResponseEntity<String> sayHelloAdmin() {
-        return ResponseEntity.ok("Hi Admin");
-    }
-
     @DeleteMapping("/user/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id, @AuthenticationPrincipal Impersonation impersonation) {
         if (!impersonation.isAdmin()) {
